@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { View, Text, ScrollView, StyleSheet, Button, Animated } from "react-native";
-import FastImage from "react-native-fast-image";
+import LazyImage from "./LazyImage";
 import { SwipeListView } from "react-native-swipe-list-view";
 import Modal from "react-native-modal";
 import styles from "./styles";
@@ -34,13 +34,11 @@ export default function Spaceships() {
 
   return (
     <View style={styles.container}>
-      <FastImage
+      <LazyImage
         style={styles.image}
         source={{
-          uri: 'https://example.com/star-wars-image.jpg',
-          priority: FastImage.priority.high,
+          uri: 'https://pixabay.com/illustrations/space-spaceship-science-fiction-7690400/',
         }}
-        resizeMode={FastImage.resizeMode.cover}
       />
       <Text style={styles.title}>Spaceships</Text>
       <Animated.View style={{ ...styles.animatedView, opacity: fadeAnim }}>
@@ -69,56 +67,3 @@ export default function Spaceships() {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  image: {
-    width: "100%",
-    height: 200,
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: "bold",
-    marginBottom: 20,
-  },
-  animatedView: {
-    width: "100%",
-  },
-  item: {
-    padding: 10,
-    fontSize: 18,
-    height: 44,
-    backgroundColor: "white",
-  },
-  hiddenItem: {
-    alignItems: "flex-end",
-    backgroundColor: "red",
-    flex: 1,
-    justifyContent: "center",
-    paddingRight: 15,
-  },
-  modalView: {
-    margin: 20,
-    backgroundColor: "white",
-    borderRadius: 20,
-    padding: 35,
-    alignItems: "center",
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5,
-  },
-  modalText: {
-    marginBottom: 15,
-    textAlign: "center",
-  },
-});
-

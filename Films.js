@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, ScrollView, StyleSheet, Button } from "react-native";
+import LazyImage from "./LazyImage";
 import { SwipeListView } from "react-native-swipe-list-view";
 import Modal from "react-native-modal";
 import styles from "./styles";
@@ -27,6 +28,12 @@ export default function Films() {
 
   return (
     <View style={styles.container}>
+         <LazyImage
+        style={styles.image}
+        source={{
+          uri: 'https://pixabay.com/illustrations/space-spaceship-science-fiction-7690400/',
+        }}
+      />
       <Text style={styles.title}>Films</Text>
       <SwipeListView
         data={planets}

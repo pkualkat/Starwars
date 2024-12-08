@@ -1,20 +1,21 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, ScrollView, StyleSheet, Button } from "react-native";
+import { View, Text, TextInput, Button, ImageBackground } from "react-native";
 import LazyImage from "./LazyImage";
 import { SwipeListView } from "react-native-swipe-list-view";
-import Modal from "react-native-modal";
+import { useNavigation } from "@react-navigation/native";
+import { RectButton } from 'react-native-gesture-handler';
 import styles from "./styles";
 
-export default function planets() {
+export default function Planets() {
   const [planets, setPlanets] = useState([]);
-  const [modalVisible, setModalVisible] = useState(false);
-  const [selectedItem, setSelectedItem] = useState("");
+  const [search, setSearch] = useState("");
+  const navigation = useNavigation();
 
   useEffect(() => {
     fetch("https://www.swapi.tech/api/planets")
       .then((resp) => resp.json())
       .then(({ results }) => {
-        setPlanets(results);
+        setPlanets(results || []);
       })
       .catch((error) => {
         console.log(error.message);
@@ -22,44 +23,53 @@ export default function planets() {
   }, []);
 
   const handleSwipe = (item) => {
-    setSelectedItem(item.name);
-    setModalVisible(true);
+    navigation.navigate("PlanetDetail", { planet: item });
   };
+
+  const filteredPlanets = planets.filter((planet) =>
+    planet.name.toLowerCase().includes(search.toLowerCase())
+  );
+
+  const renderHiddenItem = (data, rowMap) => (
+    <ImageBackground
+      source={require('./assets/saber.png')}
+      style={styles.rowBackImage}
+    >
+      <View style={styles.rowBack}>
+        <RectButton
+          style={styles.backRightBtn}
+          onPress={() => handleSwipe(data.item)}
+        >
+          <Text style={styles.backTextWhite}>Details</Text>
+        </RectButton>
+      </View>
+    </ImageBackground>
+  );
 
   return (
     <View style={styles.container}>
+      <TextInput
+        style={styles.searchBox}
+        placeholder="Search Planets"
+        value={search}
+        onChangeText={(text) => setSearch(text)}
+      />
       <LazyImage
         style={styles.image}
-        source={{
-          uri: 'https://pixabay.com/illustrations/space-spaceship-science-fiction-7690400/',
-        }}
+        source={require('./assets/Fleet1.jpg')}
       />
-      <Text style={styles.title}>planets</Text>
+      <Text style={styles.title}>Planets</Text>
       <SwipeListView
-        data={planets}
+        data={filteredPlanets}
         keyExtractor={(item) => item.uid}
         renderItem={({ item }) => (
           <View style={styles.item}>
             <Text>{item.name}</Text>
           </View>
         )}
-        renderHiddenItem={({ item }) => (
-          <View style={styles.hiddenItem}>
-            <Button title="Show" onPress={() => handleSwipe(item)} />
-          </View>
-        )}
+        renderHiddenItem={renderHiddenItem}
         rightOpenValue={-75}
       />
-      <Modal isVisible={modalVisible}>
-        <View style={styles.modalView}>
-          <Text style={styles.modalText}>{selectedItem}</Text>
-          <Button title="Close" onPress={() => setModalVisible(false)} />
-        </View>
-      </Modal>
     </View>
   );
 }
-
-
-
-

@@ -32,5 +32,7 @@ LazyImage.propTypes = {
   style: PropTypes.shape({
     width: PropTypes.number.isRequired,
     height: PropTypes.number.isRequired,
-  }),
+  }).isRequired,
 };
+
+
